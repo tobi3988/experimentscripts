@@ -7,6 +7,7 @@ def main():
     # avgowd_var()
     # avgowd_multipath_var()
     loss()
+    loss_multipath()
 
 
 def avgowd():
@@ -59,9 +60,19 @@ def avgowd_multipath_var():
 def loss():
     rawdata = np.genfromtxt('experiments/logs/loss/metrics.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    filtered_data[:, 5] = filtered_data[:, 5] * 100
     print('mean of measured loss: %s' % str(np.mean(filtered_data[:, 5])))
     print('std of measured loss: %s' % str(np.std(filtered_data[:, 5])))
     np.savetxt("out/loss_out.csv", filtered_data[:, [0, 5]], delimiter=",", fmt='%1.4f')
+
+
+def loss_multipath():
+    rawdata = np.genfromtxt('experiments/logs/loss/multipath.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    filtered_data[:, 3] = filtered_data[:, 3] * 100
+    print('mean of measured loss multipath: %s' % str(np.mean(filtered_data[:, 3])))
+    print('std of measured loss multipath: %s' % str(np.std(filtered_data[:, 3])))
+    np.savetxt("out/loss_multipath_out.csv", filtered_data[:, [0, 3]], delimiter=",", fmt='%1.4f')
 
 
 if __name__ == '__main__':
