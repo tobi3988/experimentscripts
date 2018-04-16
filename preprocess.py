@@ -7,7 +7,10 @@ def main():
     # avgowd_var()
     # avgowd_multipath_var()
     loss()
-    loss_multipath()
+    # loss_multipath()
+    # loss_var()
+    # loss_multipath_var()
+    reordering()
 
 
 def avgowd():
@@ -74,6 +77,36 @@ def loss_multipath():
     print('std of measured loss multipath: %s' % str(np.std(filtered_data[:, 3])))
     np.savetxt("out/loss_multipath_out.csv", filtered_data[:, [0, 3]], delimiter=",", fmt='%1.4f')
 
+
+def loss_var():
+    rawdata = np.genfromtxt('experiments/logs/packet_loss_var/metrics.csv', delimiter=',')
+    network_data = np.genfromtxt('experiments/logs/packet_loss_var/network.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    filtered_data[:, 5] = filtered_data[:, 5] * 100
+    filtered_data[:, 9] = (1 - (1 - filtered_data[:, 9]/100)**3)*100
+    print('mean of measured loss var: %s' % str(np.mean(filtered_data[:, 5])))
+    print('std of measured loss var: %s' % str(np.std(filtered_data[:, 5])))
+    np.savetxt("out/loss_var_out.csv", filtered_data[:, [0, 5, 9]], delimiter=",", fmt='%1.3f')
+
+
+def loss_multipath_var():
+    rawdata = np.genfromtxt('experiments/logs/packet_loss_var/multipath.csv', delimiter=',')
+    network_data = np.genfromtxt('experiments/logs/packet_loss_var/network.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    filtered_data[:, 3] = filtered_data[:, 3] * 100
+    filtered_data[:, 5] = (1 - (1 - filtered_data[:, 5]/100)**9)*100
+    print('mean of measured loss multipath var: %s' % str(np.mean(filtered_data[:, 3])))
+    print('std of measured loss multipath var: %s' % str(np.std(filtered_data[:, 3])))
+    np.savetxt("out/loss_multipath_var_out.csv", filtered_data[:, [0, 3, 5]], delimiter=",", fmt='%1.3f')
+
+
+def reordering():
+    rawdata = np.genfromtxt('experiments/logs/reordering/metrics.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    filtered_data[:, 6] = filtered_data[:, 6] * 100
+    print('mean of measured reordering: %s' % str(np.mean(filtered_data[:, 6])))
+    print('std of measured reordering: %s' % str(np.std(filtered_data[:, 6])))
+    np.savetxt("out/reordering_out.csv", filtered_data[:, [0, 6]], delimiter=",", fmt='%1.4f')
 
 if __name__ == '__main__':
     main()
