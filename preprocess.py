@@ -6,11 +6,12 @@ def main():
     # avgowd_multipath()
     # avgowd_var()
     # avgowd_multipath_var()
-    loss()
+    # loss()
     # loss_multipath()
     # loss_var()
     # loss_multipath_var()
-    reordering()
+    # reordering()
+    reordering_multipath()
 
 
 def avgowd():
@@ -106,7 +107,15 @@ def reordering():
     filtered_data[:, 6] = filtered_data[:, 6] * 100
     print('mean of measured reordering: %s' % str(np.mean(filtered_data[:, 6])))
     print('std of measured reordering: %s' % str(np.std(filtered_data[:, 6])))
-    np.savetxt("out-dir/reordering_out.csv", filtered_data[:, [0, 6]], delimiter=",", fmt='%1.4f')
+    np.savetxt("out-dir/reordering_out.csv", filtered_data[:, [0, 6]], delimiter=",", fmt='%1.3f')
+
+def reordering_multipath():
+    rawdata = np.genfromtxt('experiments/logs/reordering/multipath.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    filtered_data[:, 4] = filtered_data[:, 4] * 100
+    print('mean of measured reordering multipath: %s' % str(np.mean(filtered_data[:, 4])))
+    print('std of measured reordering multipath: %s' % str(np.std(filtered_data[:, 4])))
+    np.savetxt("out-dir/reordering_multipath_out.csv", filtered_data[:, [0, 4]], delimiter=",", fmt='%1.3f')
 
 if __name__ == '__main__':
     main()
