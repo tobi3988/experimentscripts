@@ -11,7 +11,10 @@ def main():
     # loss_var()
     # loss_multipath_var()
     # reordering()
-    reordering_multipath()
+    # reordering_multipath()
+    # reordering_var()
+    # percentile()
+    percentile_multipath()
 
 
 def avgowd():
@@ -84,7 +87,7 @@ def loss_var():
     network_data = np.genfromtxt('experiments/logs/packet_loss_var/network.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
     filtered_data[:, 5] = filtered_data[:, 5] * 100
-    filtered_data[:, 9] = (1 - (1 - filtered_data[:, 9]/100)**3)*100
+    filtered_data[:, 9] = (1 - (1 - filtered_data[:, 9] / 100) ** 3) * 100
     print('mean of measured loss var: %s' % str(np.mean(filtered_data[:, 5])))
     print('std of measured loss var: %s' % str(np.std(filtered_data[:, 5])))
     np.savetxt("out-dir/loss_var_out.csv", filtered_data[:, [0, 5, 9]], delimiter=",", fmt='%1.3f')
@@ -95,7 +98,7 @@ def loss_multipath_var():
     network_data = np.genfromtxt('experiments/logs/packet_loss_var/network.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
     filtered_data[:, 3] = filtered_data[:, 3] * 100
-    filtered_data[:, 5] = (1 - (1 - filtered_data[:, 5]/100)**9)*100
+    filtered_data[:, 5] = (1 - (1 - filtered_data[:, 5] / 100) ** 9) * 100
     print('mean of measured loss multipath var: %s' % str(np.mean(filtered_data[:, 3])))
     print('std of measured loss multipath var: %s' % str(np.std(filtered_data[:, 3])))
     np.savetxt("out-dir/loss_multipath_var_out.csv", filtered_data[:, [0, 3, 5]], delimiter=",", fmt='%1.3f')
@@ -109,6 +112,7 @@ def reordering():
     print('std of measured reordering: %s' % str(np.std(filtered_data[:, 6])))
     np.savetxt("out-dir/reordering_out.csv", filtered_data[:, [0, 6]], delimiter=",", fmt='%1.3f')
 
+
 def reordering_multipath():
     rawdata = np.genfromtxt('experiments/logs/reordering/multipath.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
@@ -116,6 +120,35 @@ def reordering_multipath():
     print('mean of measured reordering multipath: %s' % str(np.mean(filtered_data[:, 4])))
     print('std of measured reordering multipath: %s' % str(np.std(filtered_data[:, 4])))
     np.savetxt("out-dir/reordering_multipath_out.csv", filtered_data[:, [0, 4]], delimiter=",", fmt='%1.3f')
+
+
+def reordering_var():
+    rawdata = np.genfromtxt('experiments/logs/pkt_reord_var/metrics.csv', delimiter=',')
+    network_data = np.genfromtxt('experiments/logs/pkt_reord_var/network.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    filtered_data[:, 6] = filtered_data[:, 6] * 100
+    filtered_data[:, 9] = (1 - (1 - filtered_data[:, 9] / 100) ** 3) * 100
+    print('mean of measured reordering var: %s' % str(np.mean(filtered_data[:, 6])))
+    print('std of measured reordering var: %s' % str(np.std(filtered_data[:, 6])))
+    np.savetxt("out-dir/reordering_var_out.csv", filtered_data[:, [0, 6, 9]], delimiter=",", fmt='%1.3f')
+
+
+def percentile():
+    rawdata = np.genfromtxt('experiments/logs/variation/metrics.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    print('mean of measured percentile: %s' % str(np.mean(filtered_data[:, 4])))
+    print('std of measured percentile: %s' % str(np.std(filtered_data[:, 4])))
+    np.savetxt("out-dir/percentile_out.csv", filtered_data[:, [0, 4]], delimiter=",", fmt='%1.3f')
+
+
+def percentile_multipath():
+    rawdata = np.genfromtxt('experiments/logs/variation/multipath.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    filtered_data[:, 2] = filtered_data[:, 2]
+    print('mean of measured percentile multipath: %s' % str(np.mean(filtered_data[:, 2])))
+    print('std of measured percentile multipath: %s' % str(np.std(filtered_data[:, 2])))
+    np.savetxt("out-dir/percentile_multipath_out.csv", filtered_data[:, [0, 2]], delimiter=",", fmt='%1.3f')
+
 
 if __name__ == '__main__':
     main()
