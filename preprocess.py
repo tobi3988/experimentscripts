@@ -14,7 +14,9 @@ def main():
     # reordering_multipath()
     # reordering_var()
     # percentile()
-    percentile_multipath()
+    percentile_var()
+    # percentile_multipath()
+    percentile_multipath_var()
 
 
 def avgowd():
@@ -148,6 +150,28 @@ def percentile_multipath():
     print('mean of measured percentile multipath: %s' % str(np.mean(filtered_data[:, 2])))
     print('std of measured percentile multipath: %s' % str(np.std(filtered_data[:, 2])))
     np.savetxt("out-dir/percentile_multipath_out.csv", filtered_data[:, [0, 2]], delimiter=",", fmt='%1.3f')
+
+
+def percentile_var():
+    rawdata = np.genfromtxt('experiments/logs/variation_var/metrics.csv', delimiter=',')
+    network_data = np.genfromtxt('experiments/logs/variation_var/network.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    filtered_data[:, 4] = filtered_data[:, 4]
+    filtered_data[:, 9] = filtered_data[:, 9] * 6
+    print('mean of measured percentile var: %s' % str(np.mean(filtered_data[:, 4])))
+    print('std of measured percentile var: %s' % str(np.std(filtered_data[:, 4])))
+    np.savetxt("out-dir/percentile_var_out.csv", filtered_data[:, [0, 4, 9]], delimiter=",", fmt='%1.3f')
+
+
+def percentile_multipath_var():
+    rawdata = np.genfromtxt('experiments/logs/variation_var/multipath.csv', delimiter=',')
+    network_data = np.genfromtxt('experiments/logs/variation_var/network.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    filtered_data[:, 2] = filtered_data[:, 2]
+    filtered_data[:, 5] =  filtered_data[:, 5] * 6
+    print('mean of measured percentile multipath var: %s' % str(np.mean(filtered_data[:, 2])))
+    print('std of measured percentile multipath var: %s' % str(np.std(filtered_data[:, 2])))
+    np.savetxt("out-dir/percentile_multipath_var_out.csv", filtered_data[:, [0, 2, 5]], delimiter=",", fmt='%1.3f')
 
 
 if __name__ == '__main__':
