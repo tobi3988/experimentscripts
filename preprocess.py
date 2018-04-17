@@ -13,10 +13,12 @@ def main():
     # reordering()
     # reordering_multipath()
     # reordering_var()
+    # reordering_multipath_var()
     # percentile()
-    percentile_var()
+    # percentile_var()
     # percentile_multipath()
-    percentile_multipath_var()
+    # percentile_multipath_var()
+    overhead()
 
 
 def avgowd():
@@ -135,6 +137,17 @@ def reordering_var():
     np.savetxt("out-dir/reordering_var_out.csv", filtered_data[:, [0, 6, 9]], delimiter=",", fmt='%1.3f')
 
 
+def reordering_multipath_var():
+    rawdata = np.genfromtxt('experiments/logs/pkt_reord_var/multipath.csv', delimiter=',')
+    network_data = np.genfromtxt('experiments/logs/pkt_reord_var/network.csv', delimiter=',')
+    filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    filtered_data[:, 4] = filtered_data[:, 4] * 100
+    filtered_data[:, 5] = (1 - (1 - filtered_data[:, 5] / 100) ** 9) * 100
+    print('mean of measured reordering multipath var: %s' % str(np.mean(filtered_data[:, 4])))
+    print('std of measured reordering multipath var: %s' % str(np.std(filtered_data[:, 4])))
+    np.savetxt("out-dir/reordering_multipath_var_out.csv", filtered_data[:, [0, 4, 5]], delimiter=",", fmt='%1.3f')
+
+
 def percentile():
     rawdata = np.genfromtxt('experiments/logs/variation/metrics.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
@@ -168,10 +181,25 @@ def percentile_multipath_var():
     network_data = np.genfromtxt('experiments/logs/variation_var/network.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
     filtered_data[:, 2] = filtered_data[:, 2]
-    filtered_data[:, 5] =  filtered_data[:, 5] * 6
+    filtered_data[:, 5] = filtered_data[:, 5] * 6
     print('mean of measured percentile multipath var: %s' % str(np.mean(filtered_data[:, 2])))
     print('std of measured percentile multipath var: %s' % str(np.std(filtered_data[:, 2])))
     np.savetxt("out-dir/percentile_multipath_var_out.csv", filtered_data[:, [0, 2, 5]], delimiter=",", fmt='%1.3f')
+
+
+def overhead():
+    handle_data_base = np.genfromtxt('experiments/logs/overhead/overhead_handle.csv', delimiter=',')
+    propagate_data_base = np.genfromtxt('experiments/logs/overhead/overhead_propagate.csv', delimiter=',')
+    handle_data = np.genfromtxt('experiments/logs/overhead-old/overhead_handle.csv', delimiter=',')
+    propagate_data = np.genfromtxt('experiments/logs/overhead-old/overhead_propagate.csv', delimiter=',')
+    print('handel base mean: %s' % str(np.mean(handle_data_base)))
+    print('propagate base mean: %s' % str(np.mean(propagate_data_base)))
+    print('handel mean: %s' % str(np.mean(handle_data)))
+    print('propagate mean: %s' % str(np.mean(propagate_data)))
+    print('handel base std: %s' % str(np.std(handle_data_base)))
+    print('propagate base std: %s' % str(np.std(propagate_data_base)))
+    print('handel std: %s' % str(np.std(handle_data)))
+    print('propagate std: %s' % str(np.std(propagate_data)))
 
 
 if __name__ == '__main__':
