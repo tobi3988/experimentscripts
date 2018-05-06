@@ -17,13 +17,15 @@ def main():
     # percentile()
     # percentile_var()
     # percentile_multipath()
-    percentile_multipath_var()
-    # overhead()
+    # percentile_multipath_var()
+    overhead()
 
 
 def avgowd():
     rawdata = np.genfromtxt('experiments/logs/avgowd/metrics.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    print('mean of measured owd : %s' % str(np.mean(filtered_data[:, 1])))
+    print('std of measured owd: %s' % str(np.std(filtered_data[:, 1])))
     np.savetxt("out-dir/avgowd_out.csv", filtered_data[:, [0, 1]], delimiter=",", fmt='%1.3f')
 
 
@@ -50,6 +52,8 @@ def convert_to_seconds_and_delete_warmup(rawdata, networkdata=None):
 def avgowd_multipath():
     rawdata = np.genfromtxt('experiments/logs/avgowd/multipath.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata)
+    print('mean of measured owd multipath: %s' % str(np.mean(filtered_data[:, 1])))
+    print('std of measured owd multipath: %s' % str(np.std(filtered_data[:, 1])))
     np.savetxt("out-dir/avgowd_multipath_out.csv", filtered_data[:, [0, 1]], delimiter=",", fmt='%1.3f')
 
 
@@ -57,6 +61,8 @@ def avgowd_var():
     rawdata = np.genfromtxt('experiments/logs/avg_owd_var/metrics.csv', delimiter=',')
     network_data = np.genfromtxt('experiments/logs/avg_owd_var/network.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
+    print('mean of measured owd var: %s' % str(np.mean(filtered_data[:, 1])))
+    print('std of measured owd var: %s' % str(np.std(filtered_data[:, 1])))
     np.savetxt("out-dir/avgowd_var_out.csv", filtered_data[:, [0, 1, 9]], delimiter=",", fmt='%1.3f')
 
 
@@ -65,6 +71,8 @@ def avgowd_multipath_var():
     network_data = np.genfromtxt('experiments/logs/avg_owd_var/network2.csv', delimiter=',')
     filtered_data = convert_to_seconds_and_delete_warmup(rawdata, networkdata=network_data)
     filtered_data[:, 5] = filtered_data[:, 5] * 3
+    print('mean of measured owd multipath var: %s' % str(np.mean(filtered_data[:, 1])))
+    print('std of measured owd multipath var: %s' % str(np.std(filtered_data[:, 1])))
     np.savetxt("out-dir/avgowd_multipath_var_out.csv", filtered_data[:, [0, 1, 5]], delimiter=",", fmt='%1.3f')
 
 
